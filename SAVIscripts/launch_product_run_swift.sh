@@ -1,4 +1,5 @@
 #!/bin/sh 
+#NOTE:  the folders for temporary storage and the location of the tarballs for cactvs are passed received as parameters
 #NOTES: for swift there will be three "locations":
 #  persistent_directory: where the input files and the apps are stored before and after the swift run` 
 #  Swift_directory: Where the results of a run will be stored and will persist after the run is completed
