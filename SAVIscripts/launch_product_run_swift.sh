@@ -1,32 +1,34 @@
 #!/bin/sh 
 #NOTES: for swift there will be three "locations":
-#  persistent_directory: where the input files and the apps are (presumably a parallel file system)
-#  Swift_directory: Where the results of a run will be stored (presumable a different location of same system)
-#  base_name: the storage where the computations will be performed (local storage or ramdisk)
-#cactvs toolkit version to be used
-#cactvs_version="cactvs3.4.6.3"
+#  persistent_directory: where the input files and the apps are stored before and after the swift run` 
+#  Swift_directory: Where the results of a run will be stored and will persist after the run is completed
+#  base_name: the storage where the computations will be performed (local storage or ramdisk, in general non persisent)
+#cactvs_version="cactvs3.4.6.3" was the only version working at this time
 cactvs_version=$1
 
-file_index=$2
+base_name=$2 #Location where files will be staged before execution
+cactvs_tar=$3 #Specific tar ball containing cactvs and modified files for the run (system dependent files)
+
+file_index=$4
 #local (or user) directory where the scripts,products and outputs directories are located 
 #and from which files are copied to the /lscratch on compute nodes and copied back to once completed
-persistent_directory=$3
+persistent_directory=$5
 #Note that we assume that the job management has put this script in the swift_directory
 swift_directory=$(pwd)
 
 #location of the building block file in a cactvs .bdb format
-bb_file=$4
+bb_file=$6
 
 #name of the reactant list filename minus the index part
 #if reactants are located in /dir1/dir2/reactant_list.infile_0001
 #then the argument should be /dir1/dir2/reactant_list.infile_
-reactant_list_filename=$5
+reactant_list_filename=$7
 reactant_list_basename=$(basename $reactant_list_filename)
 
 #this will be used as "suffix" for file names (optional). 
 #Instead of default outputs such as outputs/out_0000.txt and products/products_0000.infile 
 #the files will be named outputs_suffix/out_suffix_000.txt and products_suffix/suffix_products_0000.infile
-name_modifier=$6
+name_modifier=$8
 
 if [[ -z $name_modifier ]]; then
     end_name_modifier=""
@@ -36,10 +38,9 @@ else
     beginning_name_modifier="${name_modifier}_"
 fi
 
-#On Beagle we put them on /tmp elsewhere, we'll see
-# MACHINE SPECIFIC PARAMETERS
-base_name="/tmp/SAVI"
-cactvs_file=cactvs${cactvs_version}"_Beagle.tar.gz"
+# Variables defined in the configuration file 
+#base_name="/tmp/SAVI"
+#cactvs_tar=cactvs${cactvs_version}"_Beagle.tar.gz"
 mkdir -p $base_name
 echo "basename: $base_name" $(ls -la $base_name)
 
@@ -62,14 +63,14 @@ make_swift_directories="mkdir -p $swift_directory/outputs${end_name_modifier} &&
 
 #copy the cactvs toolkit to the staging storage if it isn't there yet
 #change according to the location of cactvs installation archive
-copy_apps_files="cp $persistent_directory/apps/${cactvs_file} $apps_directory"
+copy_apps_files="cp $persistent_directory/apps/${cactvs_tar} $apps_directory"
 #copy_aux_dbs="cp $persistent_directory/aux_files/{ams_stereo_lookup.tch,pubchem_stereo_lookup.tch} $aux_files_directory"
 copy_aux_dbs0="ln -s $persistent_directory/aux_files/ams_stereo_lookup.tch $aux_files_directory"
 copy_aux_dbs1="ln -s $persistent_directory/aux_files/pubchem_stereo_lookup.tch $aux_files_directory"
 copy_aux_dbs="$copy_aux_dbs0 && $copy_aux_dbs1"
 #extract the cactvs installation on /lscratch
-extract_apps_files="tar -C $apps_directory -xf $apps_directory/${cactvs_file}"
-rm_staged_tar="rm -rf $apps_directory/${cactvs_file}"
+extract_apps_files="tar -C $apps_directory -xf $apps_directory/${cactvs_tar}"
+rm_staged_tar="rm -rf $apps_directory/${cactvs_tar}"
 stage_core_files="$copy_apps_files && $copy_aux_dbs && $extract_apps_files && $rm_staged_tar"
 # Files that are needed for every run
 copy_tcl_scripts="cp $persistent_directory/scripts/*.tcl $tcl_scripts_directory"
@@ -108,7 +109,7 @@ ls -lrth $inputs_directory
 ls -lrth $aux_files_directory
 
 #launch the job by calling the starter tcl script
-CMD="${cactvs_home}/csts_beagle $cactvs_home -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt"
+CMD="${cactvs_home}/csts_swift $cactvs_home -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt"
 echo $CMD
 eval $CMD
 #echo "CURRENT LOCATION: "$(pwd)

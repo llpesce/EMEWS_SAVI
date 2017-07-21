@@ -1,4 +1,8 @@
 #! /usr/bin/env bash
+# Expected name of experiment (AKA, the current campaign, swift run, SAVI db run...)
+# All the configuration that is system specific is in ../EMEWS_SAVI.conf
+
+
 
 set -eu
 
@@ -15,21 +19,23 @@ fi
 export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
 # source some utility functions used by EMEWS in this script
 source "${EMEWS_PROJECT_ROOT}/etc/emews_utils.sh"
+source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
 
 export EXPID=$1
 export TURBINE_OUTPUT=$EMEWS_PROJECT_ROOT/experiments/$EXPID
 check_directory_exists
 
+# All the following variables have been moved to config file in $EMEWS_PROJECT_ROOT
 # TODO edit the number of processes as required.
-export PROCS=2
+#export PROCS=2
 
 # TODO edit QUEUE, WALLTIME, PPN, AND TURNBINE_JOBNAME
 # as required. Note that QUEUE, WALLTIME, PPN, AND TURNBINE_JOBNAME will
 # be ignored if the MACHINE variable (see below) is not set.
-export QUEUE=batch
-export WALLTIME=00:10:00
-export PPN=16
-export TURBINE_JOBNAME="${EXPID}_job"
+#export QUEUE=batch
+#export WALLTIME=05:00:00
+#export PPN=2
+#export TURBINE_JOBNAME="${EXPID}_job"
 
 # if R cannot be found, then these will need to be
 # uncommented and set correctly.
@@ -44,9 +50,9 @@ export TURBINE_JOBNAME="${EXPID}_job"
 # command line arguments to the swift script.
 CMD_LINE_ARGS="$*"
 
-# set machine to your schedule type (e.g. pbs, slurm, cobalt etc.),
+# set machine to your schedule type (e.g. pbs, slurm, cobalt, cray etc.),
 # or empty for an immediate non-queued unscheduled run
-MACHINE=""
+#MACHINE="cray"
 
 if [ -n "$MACHINE" ]; then
   MACHINE="-m $MACHINE"

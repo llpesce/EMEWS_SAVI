@@ -1,5 +1,6 @@
 #!/bin/bash
-#cactvsHOME="/lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run/apps/cactvs3.4.6.3"
+# This script prepares the environment for tclcactvs and executes it 
+# NOTE: Nothing in it should be dependent upon the machine it is run on (as long as it is UNIX/LINUX and runs bash)
 cactvsHOME=$1
 shift 1
 TK_LIBRARY="$cactvsHOME/tk8.6/"
@@ -12,11 +13,8 @@ DATADIR="$cactvsHOME"
 PATH="$cactvsHOME/lib/:$DATADIR:$PATH"
 LD_LIBRARY_PATH="$cactvsHOME/lib:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH PATH
+#The following doesn't seem to work or at least not work as I thought it would - LLP ANL July 2017
 export TK_LIBRARY TCL_LIBRARY TCLX_LIBRARY BLT_LIBRARY TIX_LIBRARY OS DATADIR
 PGM="$cactvsHOME/lib/tclcactvs"
 ls -la $PGM
-#echo LD: $LD_LIBRARY_PATH 
-#echo PATH: $PATH 
-#echo "$@"  
-#echo $TK_LIBRARY $TCL_LIBRARY $TCLX_LIBRARY $BLT_LIBRARY $TIX_LIBRARY $OS $DATADIR 
 exec "$PGM" -bd "$@"

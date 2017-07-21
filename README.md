@@ -39,8 +39,17 @@ $EMEWS_PROJECT_ROOT/swift/swift_run_sweep.sh <run_ID>
 
 The sweep will execute the runs specified in 
 
+## SYSTEM or EVEN RUN SPECIFIC DEPENDENCIES ARE IN
+File contains inherently local information and need to be adapted to the local storage
 $EMEWS_PROJECT_ROOT/data/input.txt
-That file contains inherently local information and need to be adapted to the local storage
+# Configuration file
+$EMEWS_PROJECT_ROOT/EMEWS_SAVI.conf
+
+##Storage and staging
+# The run assumes that three storage locations will be utilized, those would be roughly
+1  persistent_directory: where the input files and the apps are stored before and after the swift run` 
+2  Swift_directory: Where the results of a run will be stored and will persist after the run is completed
+3  base_name: the storage where the computations will be performed (local storage or ramdisk, in general non persisent)
 
 It will use the wrapper 
 $EMEWS_PROJECT_ROOT/scripts/product_run.sh
@@ -50,7 +59,7 @@ which is more or less exactly what Yuri provided me. With two exceptions that ar
 SAVIscripts/launch_product_run_swift_beagle.sh
 SAVIscripts/csts_beagle
 
-the former should be dropped into the "savi_trial_run"/scripts folder, the latter into theapps/cactvs3.4.6.3 folder under "savi_trial_run"/apps
+the former should be dropped into the "savi_trial_run"/scripts folder, the latter into the apps/cactvs3.4.6.3 folder under "savi_trial_run"/apps
 
 I haven't tests the main program because the staging tests of the wrappers failed. 
 

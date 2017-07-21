@@ -2,12 +2,16 @@
 
 set -eu
 
-# Location of the base SAVI installation
-SAVI_SRC_ROOT="/lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run"
-sub_script='scripts/launch_product_run_swift_beagle.sh'
-#Define the version of the package cactvus to use
-cactvs="3.4.6.3"
-CMD="sh ${SAVI_SRC_ROOT}/$sub_script $cactvs"
+export EMEWS_PROJECT_ROOT=$(/bin/pwd)
+source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
+
+# Location of the base SAVI installation currently in "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
+#SAVI_SRC_ROOT="/lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run"
+# Note that the scripts are not part of the CACTVS installation see README
+sub_script='scripts/launch_product_run_swift.sh'
+#Define the version of the package cactvus to use, the location of local storage for the run and the cactvs package
+#cactvs="3.4.6.3"
+CMD="sh ${SAVI_SRC_ROOT}/$sub_script $cactvs $base_name $cactvs_tar "
 
 # Check for an optional timeout threshold in seconds. If the duration of the
 # model run as executed below, takes longer that this threshhold
