@@ -116,8 +116,8 @@ eval $CMD
 #eval $apps_directory/${cactvs_version}/csts_beagle -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt
 
 #execute copying of the outputs and results
-#echo "$copy_results"
-#eval $copy_results
-#echo "$clean_up_staged"
-#eval $clean_up_staged
-#sleep 100
+echo "$copy_results"
+eval $copy_results
+echo "$clean_up_staged"
+eval $clean_up_staged
+sleep 100

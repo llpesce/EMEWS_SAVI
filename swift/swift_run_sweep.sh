@@ -2,8 +2,6 @@
 # Expected name of experiment (AKA, the current campaign, swift run, SAVI db run...)
 # All the configuration that is system specific is in ../EMEWS_SAVI.conf
 
-
-
 set -eu
 
 if [ "$#" -ne 1 ]; then
