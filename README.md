@@ -40,7 +40,9 @@ $EMEWS_PROJECT_ROOT/swift/swift_run_sweep.sh <run_ID>
 The sweep will execute the runs specified in 
 
 ## SYSTEM or EVEN RUN SPECIFIC DEPENDENCIES ARE IN
-File contains inherently local information and need to be adapted to the local storage
+#File contains inherently local information and need to be adapted to the local storage
+# Note that the input file can be created using a simple python script in the same directory
+#  python makeEMEWSInput.py <Location of input files> input.txt >makeInput.log
 $EMEWS_PROJECT_ROOT/data/input.txt
 # Configuration file
 $EMEWS_PROJECT_ROOT/EMEWS_SAVI.conf

@@ -5,6 +5,7 @@
 #  Swift_directory: Where the results of a run will be stored and will persist after the run is completed
 #  base_name: the storage where the computations will be performed (local storage or ramdisk, in general non persisent)
 #cactvs_version="cactvs3.4.6.3" was the only version working at this time
+echo "%%%START SAVI RUN at" $(date +%F" "%T) "%%%"
 cactvs_version=$1
 
 base_name=$2 #Location where files will be staged before execution
@@ -66,41 +67,49 @@ make_swift_directories="mkdir -p $swift_directory/outputs${end_name_modifier} &&
 #change according to the location of cactvs installation archive
 copy_apps_files="cp $persistent_directory/apps/${cactvs_tar} $apps_directory"
 #copy_aux_dbs="cp $persistent_directory/aux_files/{ams_stereo_lookup.tch,pubchem_stereo_lookup.tch} $aux_files_directory"
-copy_aux_dbs0="ln -s $persistent_directory/aux_files/ams_stereo_lookup.tch $aux_files_directory"
-copy_aux_dbs1="ln -s $persistent_directory/aux_files/pubchem_stereo_lookup.tch $aux_files_directory"
-copy_aux_dbs="$copy_aux_dbs0 && $copy_aux_dbs1"
+copy_aux_dbs0="cp $persistent_directory/aux_files/ams_stereo_lookup.tch $aux_files_directory"
+copy_aux_dbs1="cp $persistent_directory/aux_files/pubchem_stereo_lookup.tch $aux_files_directory"
+copy_bb_file="cp $bb_file $aux_files_directory" 
+copy_aux_files="$copy_aux_dbs0 && $copy_aux_dbs1 && $copy_bb_file"
+protect_apps_files="chmod -R -w $apps_directory" #Needed on Beagle where the shared libraries are removed if not
+#copy other necessary (such as building block file, pubchem and AMS) files to /lscratch
+#LP copy_aux_files="cp $bb_file $aux_files_directory && cp $persistent_directory/aux_files/* $aux_files_directory" 
 #extract the cactvs installation on /lscratch
 extract_apps_files="tar -C $apps_directory -xf $apps_directory/${cactvs_tar}"
 rm_staged_tar="rm -rf $apps_directory/${cactvs_tar}"
-stage_core_files="$copy_apps_files && $copy_aux_dbs && $extract_apps_files && $rm_staged_tar"
+stage_core_files="$copy_apps_files && $copy_aux_files && $extract_apps_files && $rm_staged_tar && $protect_apps_files"
 # Files that are needed for every run
 copy_tcl_scripts="cp $persistent_directory/scripts/*.tcl $tcl_scripts_directory"
 #copy input files (reactant lists) to staging location
 copy_input_files="cp $reactant_list_filename${file_index} $inputs_directory"
 
-#copy other necessary (such as building block file, pubchem and AMS) files to /lscratch
-#LP copy_aux_files="cp $bb_file $aux_files_directory && cp $persistent_directory/aux_files/* $aux_files_directory" 
-copy_aux_files="cp $bb_file $aux_files_directory" 
 
 #LP copy_files="$copy_apps_files && $extract_apps_files && $copy_input_files && $copy_aux_files"
-stage_run_files="$copy_aux_files && $copy_input_files && $copy_tcl_scripts"
+stage_run_files="$copy_input_files && $copy_tcl_scripts"
 
 # move  outputs and results from /lscratch to local persistent directory
 copy_results_outputs="mv $outputs_directory/* $swift_directory/outputs${end_name_modifier}/"
 copy_results_products="mv $products_directory/* $swift_directory/products${end_name_modifier}/"
 copy_results="$copy_results_outputs && $copy_results_products"
-clean_up_staged="rm $aux_files_directory/$bb_file && rm $inputs_directory/$reactant_list_filename${file_index} "
+clean_up_staged="rm $inputs_directory/$reactant_list_basename${file_index} "
 
 echo "$make_directories"
 eval $make_directories
 echo "$make_swift_directories"
 eval $make_swift_directories
-if [ ! -d "${apps_directory}/cactvs${cactvs_version}" ]; then
+lock=$base_name/lock.file
+sleep $((RANDOM % 10 + 1)) # wait some random amount of time between 1 and 10 seconds 
+if [ ! -d "${apps_directory}/cactvs${cactvs_version}" ] && [ ! -e "$lock" ]; then
+   touch $lock
    echo $stage_core_files
    eval $stage_core_files
+   rm $lock
 else
+   while [ -e $lock ]; do
+     sleep 10
+   done
    echo "App files already on disk " $(ls -la $apps_directory)
-   sleep 60 #To make sure that the files have time to unzip -- suboptimal
+   sleep 10 #To make sure that the files have time to unzip -- suboptimal
 fi
 echo "$stage_run_files"
 eval "$stage_run_files"
@@ -122,3 +131,4 @@ eval $copy_results
 echo "$clean_up_staged"
 eval $clean_up_staged
 sleep 100
+echo %%%END of SAVI RUN at $(date +%F" "%T) %%%

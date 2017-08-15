@@ -1,0 +1,10 @@
+#Ignore the output directories
+/experiments
+#Ignore the test directories
+/test
+#ignore the run directory content
+/run
+#ignore the temporary files
+.lazybones/
+#Ignore compiled swift code
+*\.tic

@@ -2,7 +2,7 @@
 
 set -eu
 
-export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
+#export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
 source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
 
 # Location of the base SAVI installation currently in "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
@@ -12,6 +12,7 @@ sub_script='scripts/launch_product_run_swift.sh'
 #Define the version of the package cactvus to use, the location of local storage for the run and the cactvs package
 #cactvs="3.4.6.3"
 CMD="sh ${SAVI_SRC_ROOT}/$sub_script $cactvs_version $base_name $cactvs_tar "
+
 
 # Check for an optional timeout threshold in seconds. If the duration of the
 # model run as executed below, takes longer that this threshhold
