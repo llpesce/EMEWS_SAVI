@@ -121,7 +121,10 @@ ls -lrth $aux_files_directory
 #launch the job by calling the starter tcl script
 CMD="${cactvs_home}/csts_swift $cactvs_home -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt"
 echo $CMD
+echo "%%%START TCVCACTVS at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
+SECONDS=0 #Reset BASH counter of elapsed time
 eval $CMD
+echo "%%%END OF TCVCACTVS at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
 #echo "CURRENT LOCATION: "$(pwd)
 #eval $apps_directory/${cactvs_version}/csts_beagle -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt
 
