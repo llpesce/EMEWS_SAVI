@@ -83,7 +83,7 @@ else
   number=$(($RANDOM % $MOD))
   if [ "$number" -eq 0 ]; then
     #Performance logs
-    top -b -d 600.00 -n 60 -u $(whoami) >top.log &
+    top -b -d 600.00 -n 60 -u $(whoami) >${instance_directory}/top.log &
   fi
 fi
 
@@ -97,7 +97,7 @@ MODEL_CMD="$CMD $param_line"
 # the optional timeout.
 set +e
 
-failedlog='failed_run.log' #each run of the swarm will log its failure (if any)
+failedlog="$instance_directory}/failed_run.log" #each run of the swarm will log its failure (if any)
 [ -e "$failedlog" ] && rm $failedlog #If for any reason there is a failure log, remove it
 
 $TIMEOUT_CMD $MODEL_CMD

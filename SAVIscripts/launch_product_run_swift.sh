@@ -49,7 +49,7 @@ echo "basename: $base_name" $(ls -la $base_name)
 #Create necessary directories on staging storage (local storage or ramdisk probably)
 #Parts that are common between all runs
 apps_directory="${base_name}/apps"
-tcl_scripts_directory="${swift_directory}" #tcl scripts need to be where we run as far as I can tell
+tcl_scripts_directory="${base_name}/scripts" #tcl scripts need to be where we run as far as I can tell
 cactvs_home="$apps_directory/cactvs${cactvs_version}"
 
 #Parts specific to this run (tiling runs might change this)
@@ -71,21 +71,21 @@ copy_aux_dbs0="cp $persistent_directory/aux_files/ams_stereo_lookup.tch $aux_fil
 copy_aux_dbs1="cp $persistent_directory/aux_files/pubchem_stereo_lookup.tch $aux_files_directory"
 copy_bb_file="cp $bb_file $aux_files_directory" 
 copy_aux_files="$copy_aux_dbs0 && $copy_aux_dbs1 && $copy_bb_file"
+copy_tcl_scripts="cp $persistent_directory/scripts/*.tcl $tcl_scripts_directory"
 protect_apps_files="chmod -R -w $apps_directory" #Needed on Beagle where the shared libraries are removed if not
 #copy other necessary (such as building block file, pubchem and AMS) files to /lscratch
 #LP copy_aux_files="cp $bb_file $aux_files_directory && cp $persistent_directory/aux_files/* $aux_files_directory" 
 #extract the cactvs installation on /lscratch
 extract_apps_files="tar -C $apps_directory -xf $apps_directory/${cactvs_tar}"
 rm_staged_tar="rm -rf $apps_directory/${cactvs_tar}"
-stage_core_files="$copy_apps_files && $copy_aux_files && $extract_apps_files && $rm_staged_tar && $protect_apps_files"
+stage_core_files="$copy_apps_files && $copy_aux_files  && $copy_tcl_scripts && $extract_apps_files && $rm_staged_tar && $protect_apps_files"
 # Files that are needed for every run
-copy_tcl_scripts="cp $persistent_directory/scripts/*.tcl $tcl_scripts_directory"
 #copy input files (reactant lists) to staging location
 copy_input_files="cp $reactant_list_filename${file_index} $inputs_directory"
 
 
 #LP copy_files="$copy_apps_files && $extract_apps_files && $copy_input_files && $copy_aux_files"
-stage_run_files="$copy_input_files && $copy_tcl_scripts"
+stage_run_files="$copy_input_files"
 
 # move  outputs and results from /lscratch to local persistent directory
 copy_results_outputs="mv $outputs_directory/* $swift_directory/outputs${end_name_modifier}/"
@@ -119,6 +119,7 @@ ls -lrth $inputs_directory
 ls -lrth $aux_files_directory
 
 #launch the job by calling the starter tcl script
+cd $tcl_scripts_directory #Necessary so that the script finds the files
 CMD="${cactvs_home}/csts_swift $cactvs_home -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt"
 echo $CMD
 echo "%%%START TCVCACTVS at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
