@@ -9,10 +9,32 @@ source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
 #SAVI_SRC_ROOT="/lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run"
 # Note that the scripts are not part of the CACTVS installation see README
 sub_script='scripts/launch_product_run_swift.sh'
+base_name_sub_script="${base_name}/$sub_script"
+mkdir -p $(dirname $base_name_sub_script)
 #Define the version of the package cactvus to use, the location of local storage for the run and the cactvs package
 #cactvs="3.4.6.3"
-CMD="sh ${SAVI_SRC_ROOT}/$sub_script $cactvs_version $base_name $cactvs_tar "
+lock=$base_name/script_lock.file
 
+#The following is a bit contorted and I am not particularly proud of it the correct solution will be 
+#implemented when we use the prologue and epilogue functions
+exec 9>$lock #attach handle 200 to the lock file 
+if [ -e "$base_name_sub_script" ]  ; then #File is there, no problem
+  sleep 2 # Just in case the filesystem is having a freezing time
+else #File does not exist
+  if flock -n 9 ; then #Acquire the lock, skip if it can't be done
+     echo Copying $sub_script to $base_name
+     cp ${SAVI_SRC_ROOT}/$sub_script $base_name_sub_script
+  else
+     while [ !  -e $base_name_sub_script ]; do
+         sleep 2
+     done
+     sleep 2 #Just in case the file system is sleeping
+  fi
+fi
+
+CMD="sh $base_name_sub_script $cactvs_version $base_name $cactvs_tar "
+
+echo $CMD
 
 # Check for an optional timeout threshold in seconds. If the duration of the
 # model run as executed below, takes longer that this threshhold

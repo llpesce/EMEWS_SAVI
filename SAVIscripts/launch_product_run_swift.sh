@@ -97,7 +97,7 @@ echo "$make_directories"
 eval $make_directories
 echo "$make_swift_directories"
 eval $make_swift_directories
-lock=$base_name/lock.file
+lock=$base_name/savi_lock.file
 sleep $((RANDOM % 10 + 1)) # wait some random amount of time between 1 and 10 seconds 
 if [ ! -d "${apps_directory}/cactvs${cactvs_version}" ] && [ ! -e "$lock" ]; then
    touch $lock
