@@ -66,5 +66,8 @@ log_script
 # echo's anything following this standard out
 set -x
 
-swift-t -n $PROCS $MACHINE -p $EMEWS_PROJECT_ROOT/swift/swift_run_sweep.swift -f="$EMEWS_PROJECT_ROOT/data/input.txt" $CMD_LINE_ARGS \
-    -e EMEWS_PROJECT_ROOT=$EMEWS_PROJECT_ROOT
+swift-t -n $PROCS $MACHINE \
+    -e EMEWS_PROJECT_ROOT="$EMEWS_PROJECT_ROOT" \
+    -e TURBINE_OUTPUT="$TURBINE_OUTPUT" \
+    -p $EMEWS_PROJECT_ROOT/swift/swift_run_sweep.swift \
+    -f="$EMEWS_PROJECT_ROOT/data/input.txt" $CMD_LINE_ARGS 
