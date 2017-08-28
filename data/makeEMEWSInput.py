@@ -29,7 +29,7 @@ for f in os.listdir(inputsDir):
     if m:
         root_name = inputsDir+"/"+m.group(1)
         id=m.group(2)
-        EM.write(id+" "+SAVIRoot+" "+bdbFile+" "+root_name+" _ \n")
+        EM.write(id+" "+SAVIRoot+" "+bdbFile+" "+root_name+" "+id+"\n")
 
 
 EM.close()
