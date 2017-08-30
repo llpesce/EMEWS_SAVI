@@ -5,7 +5,7 @@
 #  Swift_directory: Where the results of a run will be stored and will persist after the run is completed
 #  base_name: the storage where the computations will be performed (local storage or ramdisk, in general non persisent)
 #cactvs_version="cactvs3.4.6.3" was the only version working at this time
-echo "%%%START SAVI RUN at" $(date +%F" "%T) "%%%"
+echo "%%%START SAVI RUN ${file_index} at" $(date +%F" "%T) "%%%"
 cactvs_version=$1
 
 base_name=$2 #Location where files will be staged before execution
@@ -122,10 +122,10 @@ ls -lrth $aux_files_directory
 cd $tcl_scripts_directory #Necessary so that the script finds the files
 CMD="${cactvs_home}/csts_swift $cactvs_home -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt"
 echo $CMD
-echo "%%%START TCLCACTVS at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
+echo "%%%START TCLCACTVS ${file_index} at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
 SECONDS=0 #Reset BASH counter of elapsed time
 eval $CMD
-echo "%%%END OF TCLCACTVS at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
+echo "%%%END OF TCLCACTVS ${file_index} at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
 #echo "CURRENT LOCATION: "$(pwd)
 #eval $apps_directory/${cactvs_version}/csts_beagle -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt
 
@@ -135,4 +135,4 @@ eval $copy_results
 echo "$clean_up_staged"
 eval $clean_up_staged
 sleep 100
-echo %%%END of SAVI RUN at $(date +%F" "%T) %%%
+echo %%%END of SAVI RUN ${file_index} at $(date +%F" "%T) %%%
