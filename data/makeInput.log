@@ -1,0 +1,8 @@
+Executing script  makeEMEWSInput.py
+Current working directory  /lustre/beagle2/lpBuild/CANDLE/SAVI/EMEWS_SAVI/data
+Content of sys.argv  ['makeEMEWSInput.py', '/lustre/beagle2/lpBuild/CANDLE/SAVI/runsInputs/savi_scale_up_inputs', 'input.txt']
+length of sys.argv  3
+location of SAVI installation /lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run
+location of bdbfile /lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run/inputs/building_block_file/sial_bb_20160407.bdb
+Location of input file /lustre/beagle2/lpBuild/CANDLE/SAVI/runsInputs/savi_scale_up_inputs
+Name of EMEWS input file that will be created input.txt

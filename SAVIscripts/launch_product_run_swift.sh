@@ -14,23 +14,23 @@ cactvs_tar=$3 #Specific tar ball containing cactvs and modified files for the ru
 file_index=$4
 #local (or user) directory where the scripts,products and outputs directories are located 
 #and from which files are copied to the /lscratch on compute nodes and copied back to once completed
-persistent_directory=$5
+#persistent_directory=$5
 #Note that we assume that the job management has put this script in the swift_directory
 swift_directory=$(pwd)
 
 #location of the building block file in a cactvs .bdb format
-bb_file=$6
+#bb_file=$5
 
 #name of the reactant list filename minus the index part
 #if reactants are located in /dir1/dir2/reactant_list.infile_0001
 #then the argument should be /dir1/dir2/reactant_list.infile_
-reactant_list_filename=$7
+reactant_list_filename=$5
 reactant_list_basename=$(basename $reactant_list_filename)
 
 #this will be used as "suffix" for file names (optional). 
 #Instead of default outputs such as outputs/out_0000.txt and products/products_0000.infile 
 #the files will be named outputs_suffix/out_suffix_000.txt and products_suffix/suffix_products_0000.infile
-name_modifier=$8
+name_modifier=$6
 
 if [[ -z $name_modifier ]]; then
     end_name_modifier=""
@@ -43,43 +43,24 @@ fi
 # Variables defined in the configuration file 
 #base_name="/tmp/SAVI"
 #cactvs_tar=cactvs${cactvs_version}"_Beagle.tar.gz"
-mkdir -p $base_name
-echo "basename: $base_name" $(ls -la $base_name)
 
 #Create necessary directories on staging storage (local storage or ramdisk probably)
 #Parts that are common between all runs
 apps_directory="${base_name}/apps"
 tcl_scripts_directory="${base_name}/scripts" #tcl scripts need to be where we run as far as I can tell
 cactvs_home="$apps_directory/cactvs${cactvs_version}"
+aux_files_directory="${base_name}/aux_files"
 
 #Parts specific to this run (tiling runs might change this)
 inputs_directory="${base_name}/inputs"
-aux_files_directory="${base_name}/aux_files"
 outputs_directory="${base_name}/outputs${end_name_modifier}"
 products_directory="${base_name}/products${end_name_modifier}"
 
-make_directories="mkdir -p $apps_directory && mkdir -p $inputs_directory && mkdir -p $aux_files_directory && mkdir -p $outputs_directory && mkdir -p $products_directory"
+make_directories="mkdir -p $inputs_directory && mkdir -p $outputs_directory && mkdir -p $products_directory"
 
 #create necessary local directories for output data
-make_swift_directories="mkdir -p $swift_directory/outputs${end_name_modifier} && mkdir -p $swift_directory/products${end_name_modifier} && mkdir -p $tcl_scripts_directory"
+make_swift_directories="mkdir -p $swift_directory/outputs${end_name_modifier} && mkdir -p $swift_directory/products${end_name_modifier}"
 
-#copy the cactvs toolkit to the staging storage if it isn't there yet
-#change according to the location of cactvs installation archive
-copy_apps_files="cp $persistent_directory/apps/${cactvs_tar} $apps_directory"
-#copy_aux_dbs="cp $persistent_directory/aux_files/{ams_stereo_lookup.tch,pubchem_stereo_lookup.tch} $aux_files_directory"
-copy_aux_dbs0="cp $persistent_directory/aux_files/ams_stereo_lookup.tch $aux_files_directory"
-copy_aux_dbs1="cp $persistent_directory/aux_files/pubchem_stereo_lookup.tch $aux_files_directory"
-copy_bb_file="cp $bb_file $aux_files_directory" 
-copy_aux_files="$copy_aux_dbs0 && $copy_aux_dbs1 && $copy_bb_file"
-copy_tcl_scripts="cp $persistent_directory/scripts/*.tcl $tcl_scripts_directory"
-protect_apps_files="chmod -R -w $apps_directory" #Needed on Beagle where the shared libraries are removed if not
-#copy other necessary (such as building block file, pubchem and AMS) files to /lscratch
-#LP copy_aux_files="cp $bb_file $aux_files_directory && cp $persistent_directory/aux_files/* $aux_files_directory" 
-#extract the cactvs installation on /lscratch
-extract_apps_files="tar -C $apps_directory -xf $apps_directory/${cactvs_tar}"
-rm_staged_tar="rm -rf $apps_directory/${cactvs_tar}"
-stage_core_files="$copy_apps_files && $copy_aux_files  && $copy_tcl_scripts && $extract_apps_files && $rm_staged_tar && $protect_apps_files"
-# Files that are needed for every run
 #copy input files (reactant lists) to staging location
 copy_input_files="cp $reactant_list_filename${file_index} $inputs_directory"
 
@@ -97,20 +78,6 @@ echo "$make_directories"
 eval $make_directories
 echo "$make_swift_directories"
 eval $make_swift_directories
-lock=$base_name/savi_lock.file
-sleep $((RANDOM % 10 + 1)) # wait some random amount of time between 1 and 10 seconds 
-if [ ! -d "${apps_directory}/cactvs${cactvs_version}" ] && [ ! -e "$lock" ]; then
-   touch $lock
-   echo $stage_core_files
-   eval $stage_core_files
-   rm $lock
-else
-   while [ -e $lock ]; do
-     sleep 10
-   done
-   echo "App files already on disk " $(ls -la $apps_directory)
-   sleep 10 #To make sure that the files have time to unzip -- suboptimal
-fi
 echo "$stage_run_files"
 eval "$stage_run_files"
 ls -lrth $base_name
@@ -119,7 +86,7 @@ ls -lrth $inputs_directory
 ls -lrth $aux_files_directory
 
 #launch the job by calling the starter tcl script
-cd $tcl_scripts_directory #Necessary so that the script finds the files
+cd $tcl_scripts_directory #Necessary so that the script finds the tcl files
 CMD="${cactvs_home}/csts_swift $cactvs_home -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt"
 echo $CMD
 echo "%%%START TCLCACTVS ${file_index} at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
