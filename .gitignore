@@ -8,3 +8,5 @@
 .lazybones/
 #Ignore compiled swift code
 *\.tic
+#in case there is any editor file
+*\.swp
