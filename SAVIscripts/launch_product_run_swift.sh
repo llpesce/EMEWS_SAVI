@@ -92,7 +92,7 @@ echo $CMD
 echo "%%%START TCLCACTVS ${file_index} at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
 SECONDS=0 #Reset BASH counter of elapsed time
 eval $CMD
-echo "%%%END OF TCLCACTVS ${file_index} at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
+echo "%%%END TCLCACTVS ${file_index} at" $(date +%F" "%T) "time elapsed $SECONDS seconds %%%"
 #echo "CURRENT LOCATION: "$(pwd)
 #eval $apps_directory/${cactvs_version}/csts_beagle -freact_chunk_all_nodb.tcl ${inputs_directory}/$reactant_list_basename $file_index $base_name $name_modifier > $outputs_directory/out_${beginning_name_modifier}${file_index}.txt
 
@@ -102,4 +102,4 @@ eval $copy_results
 echo "$clean_up_staged"
 eval $clean_up_staged
 sleep 100
-echo %%%END of SAVI RUN ${file_index} at $(date +%F" "%T) %%%
+echo %%%END SAVI RUN ${file_index} at $(date +%F" "%T) %%%
