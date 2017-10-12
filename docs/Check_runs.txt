@@ -1,0 +1,12 @@
+#FROM THE DIRECTORY WHERE SAVI WAS CALLED
+#To find how many jobs have been started check the err files in the case
+# of SAVI on BEAGLE they contain one line, so the two should be identical
+# if no unexpected errors were returned (the one line is a known warning)
+>find $(cat turbine-directory.txt) -name err.txt -exec cat {} \; | wc
+>find $(cat turbine-directory.txt) -name err.txt  | wc
+#To find how many jobs completed tclcactvs
+>find $(cat turbine-directory.txt) -name out.txt -exec grep '%%%END OF TCL' {} \;  | wc
+#To find memory occupation and other performance metrics from the log
+# file produced by top
+> find $(cat turbine-directory.txt) -name top.log -exec cat {} \; | grep tclcactvs
+
