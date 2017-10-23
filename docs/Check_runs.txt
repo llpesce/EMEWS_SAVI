@@ -10,3 +10,7 @@
 # file produced by top
 > find $(cat turbine-directory.txt) -name top.log -exec cat {} \; | grep tclcactvs
 
+#END OF RUN CHECKS
+# was there any failure returned by the calls to the savi wrappers?
+ find $(cat turbine-directory.txt) -name "failed_run.log"
+

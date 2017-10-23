@@ -10,3 +10,7 @@
 *\.tic
 #in case there is any editor file
 *\.swp
+# time logs
+times_*
+#run dirs
+run_*

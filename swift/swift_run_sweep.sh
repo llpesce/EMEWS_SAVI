@@ -86,6 +86,7 @@ turbine -m cray           \
         -f="$EMEWS_PROJECT_ROOT/data/input.txt" \
         $CMD_LINE_ARGS 
 
+#        -f="$EMEWS_PROJECT_ROOT/data/new.input" \
 
 #swift-t -n $PROCS $MACHINE \
 #    -e EMEWS_PROJECT_ROOT="$EMEWS_PROJECT_ROOT" \
