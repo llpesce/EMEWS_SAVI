@@ -44,8 +44,10 @@ The sweep will execute the runs specified in
 # Note that the input file can be created using a simple python script in the same directory
 #  python makeEMEWSInput.py <Location of input files> input.txt >makeInput.log
 $EMEWS_PROJECT_ROOT/data/input.txt
-# Configuration file
+# Configuration file and savi installation information
 $EMEWS_PROJECT_ROOT/EMEWS_SAVI.conf
+#Configuration of the run (nr of processes, processes per node, account and so on)
+$EMEWS_PROJECT_ROOT/EMEWS_SAVI.run.conf
 
 ##Storage and staging
 # The run assumes that three storage locations will be utilized, those would be roughly

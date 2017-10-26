@@ -1,0 +1,26 @@
+#!/bin/bash
+#File containing specific variables/settings that Definte how the workflow will be executed for
+#a specific campaign
+# the lines where a name of a machine appears is where the setting is very likely to be machine specific
+# Beagle : NIH Cray XE6 at ANL expected life 2010-2018 as of July 2017 
+#NOTE: the environment for the machine and SAVI run is defined in a different conf file
+
+## Variables used by the bash script that launches swift-t
+# Number of concurrent processes, including the one controlling the run from the compute nodes
+# Thus PROCS=2 will execute only one computation at a time
+export PROCS=801
+# TODO edit QUEUE, WALLTIME, PPN, AND TURNBINE_JOBNAME
+# as required. Note that QUEUE, WALLTIME, PPN, AND TURNBINE_JOBNAME will
+# be ignored if the MACHINE variable (see below) is not set.
+export QUEUE=batch
+#Total time for the complete SAVI RUN
+export WALLTIME=200:00:00
+# Number of processes per node, depending upon the system
+export PPN=32
+# set machine to your schedule type (e.g. pbs, slurm, cobalt, cray etc.),
+# or empty for an immediate non-queued unscheduled run
+export PROJECT=CI-CCR000040
+
+
+
+

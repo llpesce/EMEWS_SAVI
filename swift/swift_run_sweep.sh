@@ -17,7 +17,8 @@ export TURBINE_LOG=1 TURBINE_DEBUG=1 ADLB_DEBUG=1
 export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
 # source some utility functions used by EMEWS in this script
 source "${EMEWS_PROJECT_ROOT}/etc/emews_utils.sh"
-source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
+source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf" #Machine or system and SAVI installation configuration
+source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.run.conf" #Configuration of this specific run
 
 export EXPID=$1
 export TURBINE_OUTPUT=$EMEWS_PROJECT_ROOT/experiments/$EXPID

@@ -4,6 +4,7 @@
 # if no unexpected errors were returned (the one line is a known warning)
 >find $(cat turbine-directory.txt) -name err.txt -exec cat {} \; | wc
 >find $(cat turbine-directory.txt) -name err.txt  | wc
+>find $(cat turbine-directory.txt) -name core
 #To find how many jobs completed tclcactvs
 >find $(cat turbine-directory.txt) -name out.txt -exec grep '%%%END OF TCL' {} \;  | wc
 #To find memory occupation and other performance metrics from the log
