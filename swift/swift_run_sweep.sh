@@ -13,7 +13,7 @@ fi
 
 # uncomment to turn on swift/t logging. Can also set TURBINE_LOG,
 # TURBINE_DEBUG, and ADLB_DEBUG to 0 to turn off logging
-export TURBINE_LOG=1 TURBINE_DEBUG=1 ADLB_DEBUG=1
+#export TURBINE_LOG=1 TURBINE_DEBUG=1 ADLB_DEBUG=1
 export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
 # source some utility functions used by EMEWS in this script
 source "${EMEWS_PROJECT_ROOT}/etc/emews_utils.sh"

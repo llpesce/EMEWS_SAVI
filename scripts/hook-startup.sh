@@ -7,12 +7,13 @@ source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
 #SAVI_SRC_ROOT="/lustre/beagle2/lpBuild/CANDLE/SAVI/savi_trial_run"
 # Note that the scripts are not part of the CACTVS installation see README
 
-echo "%%%START OF STARTUP HOOK " $(date +%F" "%T) "%%%"
+nodeid=$(hostname)
+echo "%%%STARTUP_HOOK: START ON $nodeid AT " $(date +%F" "%T) "%%%"
 echo "EMEWS_PROJECT_ROOT=${EMEWS_PROJECT_ROOT}"
 
 #Make main directory from where the jobs will be run
 mkdir -p $base_name
-echo "base_name: $base_name" $(ls -la $base_name)
+echo "%%%STARTUP_HOOK: basename ON $nodeid " $(ls -la $base_name)
 
 sub_script='scripts/launch_product_run_swift.sh'
 base_name_sub_script="${base_name}/$sub_script"
@@ -20,7 +21,7 @@ mkdir -p $(dirname $base_name_sub_script)
 #Define the version of the package cactvus to use, the location of local storage for the run and the cactvs package
 
 #Copy the master script
-echo Copying $sub_script to $base_name
+#echo "%%%STARTUP_HOOK: Copying $sub_script to $base_name "
 cp ${SAVI_SRC_ROOT}/$sub_script $base_name_sub_script
 
 #Create necessary directories on staging storage (local storage or ramdisk probably)
@@ -50,18 +51,37 @@ extract_apps_files="tar -C $apps_directory -xf $apps_directory/${cactvs_tar}"
 rm_staged_tar="rm -rf $apps_directory/${cactvs_tar}"
 stage_core_files="$copy_apps_files && $copy_aux_files  && $copy_tcl_scripts && $extract_apps_files && $rm_staged_tar && $protect_apps_files"
 
-echo $make_directories
+echo "%%%STARTUP_HOOK: ON ${nodeid}:  $make_directories"
 eval $make_directories
 
-echo $stage_core_files
+echo "%%%STARTUP_HOOK: ON ${nodeid}:  $stage_core_files"
 eval $stage_core_files
 
 ls -la  $base_name
 #Wait a little bit to make that the filesystem isn't letting anything slip by
 sleep 10
 
+
+echo "%%%STARTUP_HOOK: staging of files compute nodes  on ${nodeid} to completed in " $SECONDS "seconds"
 mkdir $nodeUnLock # set a lock to make sure no process on that node can start
 
-echo "%%%END OF STARTUP HOOK " $(date +%F" "%T) "%%%"
+#Performance Log files will be produced 5% of the time
+# in the $instance_directory
+if ps ax | grep -v grep | grep top > /dev/null
+then
+ echo "%%%STARTUP_HOOK: WARNING on ${nodeid} top is already running on this node"
+else
+  MOD=2 # The probability of a performance log to be made is 1/MOD
+  number=$(($RANDOM % $MOD))
+  if [ "$number" -eq 0 ]; then
+    #Performance logs
+    top -b -d 600.00 -n 60 -u $(whoami) >${TURBINE_OUTPUT}/${nodeid}.top.log &
+  fi
+fi
+
+wait
+
+
+echo "%%%STARTUP_HOOK: ${nodeid} END" $(date +%F" "%T) "%%%"
 
 

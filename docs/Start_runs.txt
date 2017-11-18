@@ -1,0 +1,14 @@
+#FROM THE DIRECTORY WHERE SAVI WILL BE CALLED
+#Need to know the location of the SAVI CORE INSTALLATION DIR
+# NOTE: here I am assuming that it's somewhere above the current 
+# work directory 
+EMEWS_PROJECT_ROOT=/lustre/beagle2/lpBuild/CANDLE/SAVI/EMEWS_SAVI
+#Put the workflows executables in the path
+export PATH=/soft/swift-t/compute/CANDLE-2017-09/stc/bin:$PATH
+export PATH=/soft/swift-t/compute/CANDLE-2017-09/turbine/bin:$PATH
+export TURBINE_OUTPUT=${EMEWS_PROJECT_ROOT}/experiments
+
+#Call the workflow compilation and run
+$EMEWS_PROJECT_ROOT/swift/swift_run_sweep.sh <run_ID>
+
+

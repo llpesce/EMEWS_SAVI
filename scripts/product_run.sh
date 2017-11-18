@@ -56,22 +56,6 @@ emews_root=$2
 instance_directory=$3
 cd $instance_directory
 
-#Performance Log files will be produced 5% of the time
-# in the $instance_directory
-sleep $((RANDOM % 11)) # wait some random amount of time between 0 and 10 seconds 
-if ps ax | grep -v grep | grep top > /dev/null
-then
- echo "top is already running on this node"
-else
-  MOD=20
-  number=$(($RANDOM % $MOD))
-  if [ "$number" -eq 0 ]; then
-    #Performance logs
-    top -b -d 600.00 -n 60 -u $(whoami) >${instance_directory}/top.log &
-  fi
-fi
-
-
 
 # TODO: Define the command to run the model
 MODEL_CMD="$CMD $param_line"
