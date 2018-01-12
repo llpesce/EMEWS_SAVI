@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
-#export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
+#export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/../ ; /bin/pwd )
 source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
 nodeid=$(hostname)
 
@@ -17,5 +17,7 @@ echo "%%%SHUTDOWN_HOOK: ERROR ON $nodeid : tmpdir on $nodeid FAILED to get clean
 fi
 
 echo "%%%SHUTDOWN_HOOK: END ON $nodeid AT " $(date +%F" "%T) "%%%"
+
+exit 0
 
 

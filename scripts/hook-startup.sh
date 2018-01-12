@@ -71,17 +71,20 @@ if ps ax | grep -v grep | grep top > /dev/null
 then
  echo "%%%STARTUP_HOOK: WARNING on ${nodeid} top is already running on this node"
 else
-  MOD=2 # The probability of a performance log to be made is 1/MOD
+  MOD=1 # The probability of a performance log to be made is 1/MOD
   number=$(($RANDOM % $MOD))
   if [ "$number" -eq 0 ]; then
+    interval=6.00
+    reps=10
+    echo "%%%STARTUP_HOOK: ${nodeid} starting top command with interval $interval and $reps repetitions " $(date +%F" "%T)
     #Performance logs
-    top -b -d 600.00 -n 60 -u $(whoami) >${TURBINE_OUTPUT}/${nodeid}.top.log &
+    top -b -d $interval -n $reps -u $(whoami) >${TURBINE_OUTPUT}/${nodeid}.top.log 
+    echo "%%%STARTUP_HOOK: ${nodeid} ending top command "  $(date +%F" "%T)
   fi
 fi
 
 wait
 
-
 echo "%%%STARTUP_HOOK: ${nodeid} END" $(date +%F" "%T) "%%%"
 
-
+exit 0

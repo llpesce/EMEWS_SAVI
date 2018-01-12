@@ -16,3 +16,5 @@ times_*
 run_*
 #various random files
 new.input
+#log files
+*\.log

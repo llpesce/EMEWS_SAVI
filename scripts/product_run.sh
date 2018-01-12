@@ -68,7 +68,8 @@ set +e
 failedlog="$instance_directory}/failed_run.log" #each run of the swarm will log its failure (if any)
 [ -e "$failedlog" ] && rm $failedlog #If for any reason there is a failure log, remove it
 
-$TIMEOUT_CMD $MODEL_CMD
+## WARNING REMOVED THE CALL TO CACTVS FOR DEBUGGING
+#$TIMEOUT_CMD $MODEL_CMD
 # $? is the exit status of the most recently executed command (i.e the
 # line above)
 RES=$?

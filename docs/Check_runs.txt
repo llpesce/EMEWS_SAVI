@@ -1,10 +1,17 @@
 #FROM THE DIRECTORY WHERE SAVI WAS CALLED
-#To find how many jobs have been started check the err files in the case
+#To find how many jobs have been started  since the beginning check the err files in the case
 # of SAVI on BEAGLE they contain one line, so the two should be identical
 # if no unexpected errors were returned (the one line is a known warning)
 >find $(cat turbine-directory.txt) -name err.txt -exec cat {} \; | wc
 >find $(cat turbine-directory.txt) -name err.txt  | wc
 >find $(cat turbine-directory.txt) -name core
+# To find how many jobs have been writing output since a time
+#Create a file for right now, with corresponding time stamp
+touch $(date +'stamp_%Y_%m_%d_%H_%M_%S')
+find $(cat turbine-directory.txt) -name out.txt -newer $(ls stamp* | head -n 1)
+#or modified at most thirty minutes ago
+find $(cat turbine-directory.txt) -name out.txt -cmin -30 | wc
+
 #To find how many jobs completed tclcactvs
 >find $(cat turbine-directory.txt) -name out.txt -exec grep '%%%END OF TCL' {} \;  | wc
 #To find memory occupation and other performance metrics from the log
