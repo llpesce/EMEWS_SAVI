@@ -67,6 +67,7 @@ mkdir $nodeUnLock # set a lock to make sure no process on that node can start
 
 #Performance Log files will be produced 5% of the time
 # in the $instance_directory
+
 if ps ax | grep -v grep | grep top > /dev/null
 then
  echo "%%%STARTUP_HOOK: WARNING on ${nodeid} top is already running on this node"
@@ -83,7 +84,7 @@ else
   fi
 fi
 
-wait
+#wait
 
 echo "%%%STARTUP_HOOK: ${nodeid} END" $(date +%F" "%T) "%%%"
 

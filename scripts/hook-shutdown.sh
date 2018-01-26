@@ -19,5 +19,3 @@ fi
 echo "%%%SHUTDOWN_HOOK: END ON $nodeid AT " $(date +%F" "%T) "%%%"
 
 exit 0
-
-
