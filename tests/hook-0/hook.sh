@@ -16,6 +16,9 @@ export PROJECT=CI-CCR000040
 export QUEUE=batch
 export TURBINE_DIRECTIVE='#PBS -l advres=stevens.4151'
 
+# Set this if necessary:
+# export TURBINE_OUTPUT_ROOT=
+
 # export QUEUE=development
 # export PROJECT=CI-MCB000175 <- DEAD
 
