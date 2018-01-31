@@ -23,7 +23,8 @@ export TURBINE_DIRECTIVE='#PBS -l advres=stevens.4151'
 # export PROJECT=CI-MCB000175 <- DEAD
 
 export TURBINE_LEADER_HOOK_STARTUP=" puts [ exec ./hook-startup.sh ]"
-export TURBINE_LEADER_HOOK_SHUTDOWN="puts [ exec ./hook-shutdown.sh ]"
+# export TURBINE_LEADER_HOOK_SHUTDOWN="puts [ exec ./hook-shutdown.sh ]"
+export TURBINE_LEADER_HOOK_SHUTDOWN="c::sync_exec {} {} {} ./hook-shutdown.sh"
 
 stc -u hi.swift
 turbine -m cray -i ./hook-init.sh hi.tic
