@@ -1,0 +1,1 @@
+Just run hook.sh
