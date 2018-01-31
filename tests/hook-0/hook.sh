@@ -3,6 +3,8 @@ set -eu
 
 # Simplest test of hook functionality
 
+cd $( dirname $0 )
+
 SWIFT_T=/soft/swift-t/compute/SAVI-2018-01-31
 PATH=$SWIFT_T/stc/bin:$PATH
 PATH=$SWIFT_T/turbine/bin:$PATH
