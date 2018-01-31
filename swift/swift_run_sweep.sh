@@ -66,7 +66,11 @@ log_script
 
 #Introduce the two hooks that allow swift to run one preparation and clean up function per node
 export TURBINE_LEADER_HOOK_STARTUP=" puts [ exec ${EMEWS_PROJECT_ROOT}/scripts/hook-startup.sh ]"
-#export TURBINE_LEADER_HOOK_SHUTDOWN=" puts [ exec ${EMEWS_PROJECT_ROOT}/scripts/hook-shutdown.sh ]"
+# export TURBINE_LEADER_HOOK_SHUTDOWN=" puts [ exec ${EMEWS_PROJECT_ROOT}/scripts/hook-shutdown.sh ]"
+
+export TURBINE_LEADER_HOOK_SHUTDOWN="c::sync_exec {} {} {} ${EMEWS_PROJECT_ROOT}/scripts/hook-shutdown.sh"
+
+# export TURBINE_LEADER_HOOK_SHUTDOWN="puts SHUTDOWN"
 
 #write out what is being used.
 echo "Swift/T PATH entries:"
