@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+#set -eu
 #export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/../ ; /bin/pwd )
 source "${EMEWS_PROJECT_ROOT}/EMEWS_SAVI.conf"
 nodeid=$(hostname)
@@ -10,12 +10,22 @@ nodeid=$(hostname)
 
 echo "%%%SHUTDOWN_HOOK: START ON $nodeid AT " $(date +%F" "%T) "%%%"
 
-if chmod -R +rwX $base_name && rm -rf $base_name; then
-echo "%%%SHUTDOWN_HOOK: ON $nodeid : tmpdir on $nodeid cleaned up"
-else
-echo "%%%SHUTDOWN_HOOK: ERROR ON $nodeid : tmpdir on $nodeid FAILED to get cleaned"
-fi
+cd $base_name # Move to the staging directory on local storage
 
-echo "%%%SHUTDOWN_HOOK: END ON $nodeid AT " $(date +%F" "%T) "%%%"
+echo "%%%SHUTDOWN_HOOK: basename $(pwd)"
+
+(if chmod -R +rwX $base_name; then
+  sleep 60;
+  echo "%%%SHUTDOWN_HOOK: ON $nodeid : file unprotected for removal"
+  if rm -rf $base_name; then
+    echo "%%%SHUTDOWN_HOOK: ON $nodeid : tmpdir on $nodeid cleaned up"
+  else
+     echo "%%%SHUTDOWN_HOOK: ERROR ON $nodeid : tmpdir on $nodeid FAILED to get cleaned"
+  fi
+else
+  echo "%%%SHUTDOWN_HOOK: ERROR ON $nodeid : could not remove protection from files"
+fi 
+
+echo "%%%SHUTDOWN_HOOK: END ON $nodeid AT " $(date +%F" "%T) "%%%" ) 2>&1
 
 exit 0

@@ -65,6 +65,8 @@ sleep 10
 echo "%%%STARTUP_HOOK: staging of files compute nodes  on ${nodeid} to completed in " $SECONDS "seconds"
 mkdir $nodeUnLock # set a lock to make sure no process on that node can start
 
+exit 0
+
 #Performance Log files will be produced 5% of the time
 # in the $instance_directory
 

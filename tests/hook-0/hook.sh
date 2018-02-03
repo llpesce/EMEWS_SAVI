@@ -10,6 +10,7 @@ PATH=$SWIFT_T/turbine/bin:$PATH
 # pt ~/FS/sfw/beagle/compute/swift-t/stc/bin
 # pt ~/FS/sfw/beagle/compute/swift-t/turbine/bin
 
+export TURBINE_OUTPUT=$(pwd)/OutPut
 export PROJECT=CI-CCR000040
 export QUEUE=batch
 export TURBINE_DIRECTIVE='#PBS -l advres=stevens.4151'
