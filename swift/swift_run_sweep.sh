@@ -64,11 +64,13 @@ USER_VARS=()
 # log variables and script to to TURBINE_OUTPUT directory
 log_script
 
+#export TURBINE_LEADER_HOOK_STARTUP="puts STARTUP"
+#export TURBINE_LEADER_HOOK_SHUTDOWN="puts SHUTDOWN"
 #Introduce the two hooks that allow swift to run one preparation and clean up function per node
 #export TURBINE_LEADER_HOOK_STARTUP=" puts [ exec ${EMEWS_PROJECT_ROOT}/scripts/hook-startup.sh ]"
-export TURBINE_LEADER_HOOK_STARTUP="c::sync_exec {} {} {} ${EMEWS_PROJECT_ROOT}/scripts/hook-startup.sh"
+#export TURBINE_LEADER_HOOK_STARTUP="c::sync_exec {} {} {} ${EMEWS_PROJECT_ROOT}/scripts/hook-startup.sh"
 #export TURBINE_LEADER_HOOK_SHUTDOWN=" puts [ exec ${EMEWS_PROJECT_ROOT}/scripts/hook-shutdown.sh ]"
-export TURBINE_LEADER_HOOK_SHUTDOWN="c::sync_exec {} {} {} ${EMEWS_PROJECT_ROOT}/scripts/hook-shutdown.sh"
+#export TURBINE_LEADER_HOOK_SHUTDOWN="c::sync_exec {} {} {} ${EMEWS_PROJECT_ROOT}/scripts/hook-shutdown.sh"
 # export TURBINE_LEADER_HOOK_SHUTDOWN="puts SHUTDOWN"
 
 #write out what is being used.
@@ -84,11 +86,12 @@ stc -u  $EMEWS_PROJECT_ROOT/swift/swift_run_sweep.swift
 # We do not need to use 'turbine -e' on Cray:
 #   Swift/T now uses qsub -V
 turbine -m cray           \
-        -i ${EMEWS_PROJECT_ROOT}/scripts/hook-init.sh \
         $EMEWS_PROJECT_ROOT/swift/swift_run_sweep.tic \
+        -i ${EMEWS_PROJECT_ROOT}/scripts/hook-init.sh \
         -f="$EMEWS_PROJECT_ROOT/data/input.txt" \
         $CMD_LINE_ARGS 
 
+#        -i ${EMEWS_PROJECT_ROOT}/scripts/hook-init.sh \
 #        -f="$EMEWS_PROJECT_ROOT/data/new.input" \
 
 #swift-t -n $PROCS $MACHINE \

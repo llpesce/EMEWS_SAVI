@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+exit 0
+
 set -eu
 
 #export EMEWS_PROJECT_ROOT=$( cd $( dirname $0 )/.. ; /bin/pwd )
